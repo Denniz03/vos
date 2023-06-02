@@ -37,7 +37,7 @@
                     selectOptions += "<option value='" + data[i].id + "'>" + data[i].naam + "</option>";
                 }
                 // Voeg de opties toe aan de selectielijst
-                $("#aankoop_bedrijf").html(selectOptions);
+                $("#aankoop_bedrijf, #verzekeringsmaatschappij").html(selectOptions);
                 }
             });
         });
@@ -188,7 +188,8 @@
         <input type="text" id="verzekering_per_maand" name="verzekering_per_maand"><br><br>
 
         <label for="verzekeringsmaatschappij">Verzekeringsmaatschappij:</label>
-        <input type="text" id="verzekeringsmaatschappij" name="verzekeringsmaatschappij"><br><br>
+        <select id="verzekeringsmaatschappij" name="verzekeringsmaatschappij"></select>
+        <button onclick="window.location.href='add_company.php'">Bedrijf toevoegen</button><br><br>
 
         <label for="verzekerings_type">Verzekerings type:</label>
         <input type="text" id="verzekerings_type" name="verzekerings_type"><br><br>

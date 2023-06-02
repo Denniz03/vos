@@ -9,12 +9,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$naam = $_POST['naam'];
-$adres = $_POST['adres'];
-$postcode = $_POST['postcode'];
-$plaats = $_POST['plaats'];
-$telefoon = $_POST['telefoon'];
-$bedrijftype = $_POST['bedrijftype'];
+$naam = mysqli_real_escape_string($conn, $_POST['naam']);
+$adres = mysqli_real_escape_string($conn, $_POST['adres']);
+$postcode = mysqli_real_escape_string($conn, $_POST['postcode']);
+$plaats = mysqli_real_escape_string($conn, $_POST['plaats']);
+$telefoon = mysqli_real_escape_string($conn, $_POST['telefoon']);
+$bedrijftype = mysqli_real_escape_string($conn, $_POST['bedrijftype']);
 // Voeg hier andere velden toe indien nodig
 
 $sql = "INSERT INTO bedrijven (naam, adres, postcode, plaats, telefoon, bedrijftype) 

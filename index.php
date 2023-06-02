@@ -3,109 +3,93 @@
 <head>
     <title>Voertuigen en Bedrijven</title>
     <style>
+        /* Tabbladstijl voor knoppen */
+        .tab-button {
+            background-color: #f1f1f1;
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tab-button.active {
+            background-color: #ccc;
+        }
+
+        /* Tabbladstijl voor inhoud */
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+        }
+
+        /* Toon het actieve tabblad */
+        .tab-content.active {
+            display: block;
+        }
+
         .tab {
             display: none;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tab");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
+        $(document).ready(function() {
+            // Functie om een tabblad te openen
+            function openTab(tabName) {
+                var tabcontent = $(".tab-content");
+                var tablinks = $(".tab-button");
+                tabcontent.removeClass("active");
+                tablinks.removeClass("active");
+                $("#" + tabName).addClass("active");
+                $("button[data-tab='" + tabName + "']").addClass("active");
             }
-            tablinks = document.getElementsByClassName("tablink");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
+
+            // Eventlistener voor het klikken op een tabknop
+            $(".tab-button").click(function() {
+                var tabName = $(this).data("tab");
+                openTab(tabName);
+            });
+
+            // Functie om de tabbladpagina te openen op basis van de URL-parameter
+            function openTabFromURL() {
+                var urlParams = new URLSearchParams(window.location.search);
+                var tabName = urlParams.get("tab");
+                if (tabName) {
+                    openTab(tabName);
+                } else {
+                    openTab("voertuigen"); // Standaard tabblad
+                }
             }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
+
+            // Open het juiste tabblad bij het laden van de pagina
+            openTabFromURL();
+        });
     </script>
 </head>
 <body>
     <?php
-    $servername = "localhost";
-    $username = "denniz03";
-    $password = "gxd7Hv";
-    $database = "vos";
-
-    // Verbinding maken met de database
-    $conn = new mysqli($servername, $username, $password, $database);
-
-    // Controleren op fouten bij het maken van de verbinding
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    // Query om te controleren of de voertuigen tabel bestaat
-    $query = "SELECT 1 FROM `vos`.`voertuigen` LIMIT 1";
-    $result = $conn->query($query);
-
-    // Als de voertuigen tabel niet bestaat, maak deze dan aan
-    if (!$result) {
-        $createTableQuery = "CREATE TABLE `vos`.`voertuigen` (
-            `id` INT NOT NULL AUTO_INCREMENT,
-            `kenteken` VARCHAR(50) NOT NULL,
-            `merk` VARCHAR(50) NOT NULL,
-            `model` VARCHAR(50) NOT NULL,
-            `uitvoering` VARCHAR(50) NOT NULL,
-            `brandstof` VARCHAR(50) NOT NULL,
-            `kleur` VARCHAR(50) NOT NULL,
-            `carrosserie` VARCHAR(50) NOT NULL,
-            `bouwjaar` INT NOT NULL,
-            `apk_datum` DATE NOT NULL,
-            `aankoop_datum` DATE NOT NULL,
-            `aankoop_kmstand` INT NOT NULL,
-            `aankoop_bedrijf` VARCHAR(50) NOT NULL,
-            `bandenmaat_voor` VARCHAR(50) NOT NULL,
-            `bandenmaat_achter` VARCHAR(50) NOT NULL,
-            `bandenspanning_voor` INT NOT NULL,
-            `bandenspanning_achter` INT NOT NULL,
-            `olie` VARCHAR(50) NOT NULL,
-            `belasting_per_maand` DECIMAL(10,2) NOT NULL,
-            `verzekering_per_maand` DECIMAL(10,2) NOT NULL,
-            `verzekeringsmaatschappij` VARCHAR(50) NOT NULL,
-            `verzekerings_type` VARCHAR(50) NOT NULL,
-            `polisnummer` VARCHAR(50) NOT NULL,
-            `energielabel` VARCHAR(50) NOT NULL,
-            `emissieklasse` VARCHAR(50) NOT NULL,
-            PRIMARY KEY (`id`)
-        )";
-        $conn->query($createTableQuery);
-    }
-
-    // Query om te controleren of de bedrijven tabel bestaat
-    $query = "SELECT 1 FROM `vos`.`bedrijven` LIMIT 1";
-    $result = $conn->query($query);
-
-    // Als de bedrijven tabel niet bestaat, maak deze dan aan
-    if (!$result) {
-        $createTableQuery = "CREATE TABLE `vos`.`bedrijven` (
-            `id` INT NOT NULL AUTO_INCREMENT,
-            `naam` VARCHAR(50) NOT NULL,
-            `adres` VARCHAR(100) NOT NULL,
-            `telefoon` VARCHAR(20) NOT NULL,
-            PRIMARY KEY (`id`)
-        )";
-        $conn->query($createTableQuery);
-    }
-
-    $conn->close();
+        $servername = "localhost";
+        $username = "denniz03";
+        $password = "gxd7Hv";
+        $database = "vos";
     ?>
 
     <div>
-        <button class="tablink" onclick="openTab(event, 'voertuigen')">Voertuigen</button>
-        <button class="tablink" onclick="openTab(event, 'bedrijven')">Bedrijven</button>
+        <button class="tab-button" data-tab="voertuigen">Voertuigen</button>
+        <button class="tab-button" data-tab="bedrijven">Bedrijven</button>
     </div>
 
-    <div id="voertuigen" class="tab">
+    <div id="voertuigen" class="tab-content">
         <h2>Voertuigen</h2>
         <table>
             <tr>
-                <th>Kenteken</th>
-                <th>Merk</th>
-                <th>Model</th>
+            <th><a href="?tab=voertuigen&sort=kenteken">Kenteken</a></th>
+                <th><a href="?tab=voertuigen&sort=merk">Merk</a></th>
+                <th><a href="?tab=voertuigen&sort=model">Model</a></th>
                 <!-- Voeg hier andere kolommen toe -->
             </tr>
             <?php
@@ -145,14 +129,14 @@
         <button onclick="window.location.href='add_vehicle.php'">Voertuig toevoegen</button>
     </div>
 
-    <div id="bedrijven" class="tab">
+    <div id="bedrijven" class="tab-content">
         <h2>Bedrijven</h2>
         <table>
             <tr>
-                <th>Naam</th>
-                <th>Adres</th>
-                <th>Telefoon</th>
-                <!-- Voeg hier andere kolommen toe -->
+                <th><a href="?tab=bedrijven&sort=naam">Naam</a></th>
+                <th><a href="?tab=bedrijven&sort=adres">Adres</a></th>
+                <th><a href="?tab=bedrijven&sort=telefoon">Telefoon</a></th>
+                <!-- Add other columns here -->
             </tr>
             <?php
             $conn = new mysqli($servername, $username, $password, $database);
@@ -160,14 +144,15 @@
                 die("Connection failed: " . $conn->connect_error);
             }
 
-            // Controleren of de tabel "bedrijven" bestaat
+            // Check if the "bedrijven" table exists
             $checkTableQuery = "SHOW TABLES LIKE 'bedrijven'";
             $checkTableResult = $conn->query($checkTableQuery);
             if ($checkTableResult->num_rows === 0) {
-                // Tabel bestaat niet, voer hier eventueel code uit om de tabel aan te maken
-                echo "<tr><td colspan='3'>De tabel 'bedrijven' bestaat niet.</td></tr>";
+                // Table does not exist, you can add code here to create the table if needed
+                echo "<tr><td colspan='3'>The 'bedrijven' table does not exist.</td></tr>";
             } else {
-                $sql = "SELECT * FROM bedrijven";
+                $sort = isset($_GET['sort']) ? $_GET['sort'] : 'naam';
+                $sql = "SELECT * FROM bedrijven ORDER BY $sort";
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -176,11 +161,11 @@
                         echo "<td><a href='view.php?id=" . $row['id'] . "'>" . $row['naam'] . "</a></td>";
                         echo "<td>" . $row['adres'] . "</td>";
                         echo "<td>" . $row['telefoon'] . "</td>";
-                        // Voeg hier andere kolommen toe
+                        // Add other columns here
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='3'>Geen bedrijven gevonden</td></tr>";
+                    echo "<tr><td colspan='3'>No companies found.</td></tr>";
                 }
             }
 
