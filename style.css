@@ -222,6 +222,9 @@ input[type="submit"] {
 .list tr:first-child:hover {
     background-color: #00000007;
 }
+.list tr:first-child:hover td {
+    background-color: #00000011;
+}
 
 .list th:first-child,
 .list td:first-child {

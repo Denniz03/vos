@@ -1,5 +1,19 @@
 <?php
     include 'functions.php';    
+
+    // Array met carrosseriegroepen en bijbehorende icoonklassen
+    $carrosserieIconen = array(
+        "Bestelbus" => "fas fa-shuttle-van",
+        "Cabriolet" => "fas fa-car-side",
+        "Coupé" => "fas fa-car",
+        "Hatchback" => "fas fa-car",
+        "MPV" => "fas fa-car",
+        "Motorfiets" => "fas fa-motorcycle",
+        "Scooter" => "fas fa-motorcycle",
+        "Sedan" => "fas fa-car",
+        "Stationwagen" => "fas fa-car",
+        "SUV" => "fas fa-truck"
+    );
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,6 +55,7 @@
         </div>
         <table class="list">
             <tr>
+                <th onclick="location.href='?tab=voertuigen&sort=carrosserie'">carrosserie<i class="fas fa-sort"></i></th>
                 <th onclick="location.href='?tab=voertuigen&sort=kenteken'">Kenteken<i class="fas fa-sort"></i></th>
                 <th onclick="location.href='?tab=voertuigen&sort=merk'">Merk<i class="fas fa-sort"></i></th>
                 <th onclick="location.href='?tab=voertuigen&sort=model'">Model<i class="fas fa-sort"></i></th>
@@ -60,6 +75,17 @@
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr onclick='selectRow(this, " . $row['id'] . ", \"voertuigen\")'>";
+                        // De waarde van $row['carrosserie']
+$carrosserie = $row['carrosserie'];
+
+// Controleer of $carrosserie een bijpassend icoon heeft
+if (array_key_exists($carrosserie, $carrosserieIconen)) {
+    $icoonKlasse = $carrosserieIconen[$carrosserie];
+} else {
+    // Geef een standaardicoon weer als er geen bijpassend icoon is gevonden
+    $icoonKlasse = "fas fa-question";
+}
+                        echo "<td><i class="' . $icoonKlasse . '"></i></td>";
                         echo "<td>" . $row['kenteken'] . "</td>";
                         echo "<td>" . $row['merk'] . "</td>";
                         echo "<td>" . $row['model'] . "</td>";
