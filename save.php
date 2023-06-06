@@ -21,8 +21,8 @@
     } else if ($page == 'bedrijf') {
 
         // SQL-query om het bedrijf op te slaan in de database
-        $sql = "INSERT INTO bedrijven (naam, straat, huisnummer, postcode, plaats, provincie, land, telefoon, email, website, bedrijfstype, logo)
-        VALUES ('$naam', '$straat', '$huisnummer', '$postcode', '$plaats', '$provincie', '$land', '$telefoon', '$email', '$website', '$bedrijfstype', '$logoNaam')";
+        $sql = "INSERT INTO bedrijven (naam, straat, huisnummer, postcode, plaats, land, telefoon, email, website, bedrijfstype)
+        VALUES ('$naam', '$straat', '$huisnummer', '$postcode', '$plaats', '$land', '$telefoon', '$email', '$website', '$bedrijfstype')";
 
     } else if ($page == 'tankinformatie') {
 

@@ -77,23 +77,6 @@
     <label class="form-label" for="plaats">Plaats:</label>
     <input type="text" id="plaats" name="plaats" required><br><br>
 
-    <label class="form-label" for="provincie">Provincie:</label>
-    <select id="provincie" name="provincie" required>
-        <option value="">Selecteer provincie</option>
-        <option value="Drenthe">Drenthe</option>
-        <option value="Flevoland">Flevoland</option>
-        <option value="Friesland">Friesland</option>
-        <option value="Gelderland">Gelderland</option>
-        <option value="Groningen">Groningen</option>
-        <option value="Limburg">Limburg</option>
-        <option value="Noord-Brabant">Noord-Brabant</option>
-        <option value="Noord-Holland">Noord-Holland</option>
-        <option value="Overijssel">Overijssel</option>
-        <option value="Utrecht">Utrecht</option>
-        <option value="Zeeland">Zeeland</option>
-        <option value="Zuid-Holland">Zuid-Holland</option>
-    </select><br><br>
-
     <label class="form-label" for="land">Land:</label>
         <select id="land" name="land" required>
         <option value="">Selecteer een land</option>
@@ -127,9 +110,6 @@
         <option value="Verzekeringsmaatschappij">Verzekeringsmaatschappij</option>
         <option value="Winkel">Winkel</option>
     </select><br><br>
-
-    <label class="form-label" for="logo">Logo:</label>
-    <input type="file" id="logo" name="logo" accept="image/*"><br><br>
 
     <input type="submit" value="Opslaan">
 </form>

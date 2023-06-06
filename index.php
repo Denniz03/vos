@@ -5,15 +5,17 @@
     $carrosserieIconen = array(
         "Bestelbus" => "fas fa-shuttle-van",
         "Cabriolet" => "fas fa-car-side",
-        "Coupé" => "fas fa-car",
-        "Hatchback" => "fas fa-car",
-        "MPV" => "fas fa-car",
+        "Coupé" => "fas fa-car-side",
+        "Hatchback" => "fas fa-car-side",
+        "MPV" => "fas fa-car-side",
         "Motorfiets" => "fas fa-motorcycle",
-        "Scooter" => "fas fa-motorcycle",
-        "Sedan" => "fas fa-car",
-        "Stationwagen" => "fas fa-car",
-        "SUV" => "fas fa-truck"
+        "Scooter" => "fas fa-scooter",
+        "Sedan" => "fas fa-car-side",
+        "Stationwagen" => "fas fa-car-side",
+        "SUV" => "fas fa-shuttle-van"
     );
+
+    $sortField = isset($_GET['sort']) ? $_GET['sort'] : '';
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,6 +31,7 @@
     <link rel="stylesheet" href="style.css?<?php echo time(); ?>">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="java.js"></script>
 </head>
 <body>
@@ -54,10 +57,11 @@
         </div>
         <table class="list">
             <tr>
-                <th onclick="location.href='?tab=voertuigen&sort=carrosserie'">carrosserie<i class="fas fa-sort"></i></th>
-                <th onclick="location.href='?tab=voertuigen&sort=kenteken'">Kenteken<i class="fas fa-sort"></i></th>
-                <th onclick="location.href='?tab=voertuigen&sort=merk'">Merk<i class="fas fa-sort"></i></th>
-                <th onclick="location.href='?tab=voertuigen&sort=model'">Model<i class="fas fa-sort"></i></th>
+            <th class="<?php echo $sortField === 'carrosserie' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=carrosserie'">soort<i class="fas fa-sort"></i></th>
+            <th class="<?php echo $sortField === 'kenteken' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=kenteken'">Kenteken<i class="fas fa-sort"></i></th>
+            <th class="<?php echo $sortField === 'merk' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=merk'">Merk<i class="fas fa-sort"></i></th>
+            <th class="<?php echo $sortField === 'model' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=model'">Model<i class="fas fa-sort"></i></th>
+            <th class="<?php echo $sortField === 'uitvoering' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=uitvoering'">uitvoering<i class="fas fa-sort"></i></th>
             </tr>
             <?php
 
@@ -66,7 +70,7 @@
             $checkTableResult = $conn->query($checkTableQuery);
             if ($checkTableResult->num_rows === 0) {
                 // Tabel bestaat niet, voer hier eventueel code uit om de tabel aan te maken
-                echo "<tr><td colspan='3'>De tabel 'voertuigen' bestaat niet.</td></tr>";
+                echo "<tr><td colspan='4'>De tabel 'voertuigen' bestaat niet.</td></tr>";
             } else {
                 $sql = "SELECT * FROM voertuigen";
                 $result = $conn->query($sql);
@@ -84,14 +88,15 @@
                             // Geef een standaardicoon weer als er geen bijpassend icoon is gevonden
                             $icoonKlasse = "fas fa-question";
                         }
-                        echo "<td><i class="' . $icoonKlasse . '"></i></td>";
+                        echo "<td><i class='" . $icoonKlasse . "'></i></td>";
                         echo "<td>" . $row['kenteken'] . "</td>";
                         echo "<td>" . $row['merk'] . "</td>";
                         echo "<td>" . $row['model'] . "</td>";
+                        echo "<td>" . $row['uitvoering'] . "</td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='3'>Geen voertuigen gevonden</td></tr>";
+                    echo "<tr><td colspan='4'>Geen voertuigen gevonden</td></tr>";
                 }
             }
             ?>
