@@ -29,7 +29,6 @@
     <link rel="stylesheet" href="style.css?<?php echo time(); ?>">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="java.js"></script>
 </head>
 <body>
@@ -49,7 +48,7 @@
     <div id="voertuigen" class="tab-content">
         <h2>Voertuigen</h2>
         <div class="table-toolbar">
-            <button onclick="window.location.href='add_vehicle.php'"><p>Toevoegen</p><i class="fas fa-add"></i></button>
+            <button onclick="window.location.href='add_vehicle.php'"><p>Toevoegen</p><i class="fas fa-plus"></i></button>
             <button onclick="editSelectedRow()"><p>Bewerken</p><i class="fas fa-edit"></i></button>
             <button onclick="deleteSelectedRow()"><p>Verwijderen</p><i class="fas fa-remove"></i></button>
         </div>
@@ -76,15 +75,15 @@
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr onclick='selectRow(this, " . $row['id'] . ", \"voertuigen\")'>";
                         // De waarde van $row['carrosserie']
-$carrosserie = $row['carrosserie'];
+                        $carrosserie = $row['carrosserie'];
 
-// Controleer of $carrosserie een bijpassend icoon heeft
-if (array_key_exists($carrosserie, $carrosserieIconen)) {
-    $icoonKlasse = $carrosserieIconen[$carrosserie];
-} else {
-    // Geef een standaardicoon weer als er geen bijpassend icoon is gevonden
-    $icoonKlasse = "fas fa-question";
-}
+                        // Controleer of $carrosserie een bijpassend icoon heeft
+                        if (array_key_exists($carrosserie, $carrosserieIconen)) {
+                            $icoonKlasse = $carrosserieIconen[$carrosserie];
+                        } else {
+                            // Geef een standaardicoon weer als er geen bijpassend icoon is gevonden
+                            $icoonKlasse = "fas fa-question";
+                        }
                         echo "<td><i class="' . $icoonKlasse . '"></i></td>";
                         echo "<td>" . $row['kenteken'] . "</td>";
                         echo "<td>" . $row['merk'] . "</td>";
@@ -103,7 +102,7 @@ if (array_key_exists($carrosserie, $carrosserieIconen)) {
     <div id="bedrijven" class="tab-content">
         <h2>Bedrijven</h2>
         <div class="table-toolbar">
-            <button onclick="window.location.href='add_company.php'"><p>Toevoegen</p><i class="fas fa-add"></i></button>
+            <button onclick="window.location.href='add_company.php'"><p>Toevoegen</p><i class="fas fa-plus"></i></button>
             <button onclick="editSelectedRow()"><p>Bewerken</p><i class="fas fa-edit"></i></button>
             <button onclick="deleteSelectedRow()"><p>Verwijderen</p><i class="fas fa-remove"></i></button>
         </div>
