@@ -15,7 +15,11 @@
         "SUV" => "fas fa-shuttle-van"
     );
 
-    $sortField = isset($_GET['sort']) ? $_GET['sort'] : '';
+    // Haal sorteer waarde op
+    $sortOrder = isset($_GET['order']) ? $_GET['order'] : 'asc';
+    echo $sortOrder;
+    $sort = isset($_GET['sort']) ? $_GET['sort'] . ' ' . $sortOrder : 'RIGHT(aankoop_datum, 4) DESC';
+    echo $sort;
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,11 +32,11 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="images/logo.png">    <meta name="format-detection" content="telephone=yes">
     <link href="../fontawesome/css/all.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/style.css?<?php echo time(); ?>">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="java.js"></script>
+    <script src="java/java.js"></script>
 </head>
 <body>
     <header>
@@ -57,11 +61,11 @@
         </div>
         <table class="list">
             <tr>
-            <th class="<?php echo $sortField === 'carrosserie' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=carrosserie'">soort<i class="fas fa-sort"></i></th>
-            <th class="<?php echo $sortField === 'kenteken' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=kenteken'">Kenteken<i class="fas fa-sort"></i></th>
-            <th class="<?php echo $sortField === 'merk' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=merk'">Merk<i class="fas fa-sort"></i></th>
-            <th class="<?php echo $sortField === 'model' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=model'">Model<i class="fas fa-sort"></i></th>
-            <th class="<?php echo $sortField === 'uitvoering' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=uitvoering'">uitvoering<i class="fas fa-sort"></i></th>
+                <th class="<?php echo $sort === 'carrosserie' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=<?php echo $sortOrder !== 'desc' ? 'carrosserie&order=desc' : 'carrosserie'; ?>'">soort<i class="fas fa-sort"></i></th>
+                <th class="<?php echo $sort === 'kenteken' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=<?php echo $sortOrder !== 'desc' ? 'kenteken&order=desc' : 'kenteken'; ?>'">Kenteken<i class="fas fa-sort"></i></th>
+                <th class="<?php echo $sort === 'merk' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=<?php echo $sortOrder !== 'desc' ? 'merk&order=desc' : 'merk'; ?>'">Merk<i class="fas fa-sort"></i></th>
+                <th class="<?php echo $sort === 'model' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=<?php echo $sortOrder !== 'desc' ? 'model&order=desc' : 'model'; ?>'">Model<i class="fas fa-sort"></i></th>
+                <th class="<?php echo $sort === 'uitvoering' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=<?php echo $sortOrder !== 'desc' ? 'uitvoering&order=desc' : 'uitvoering'; ?>'">uitvoering<i class="fas fa-sort"></i></th>
             </tr>
             <?php
 
@@ -72,7 +76,7 @@
                 // Tabel bestaat niet, voer hier eventueel code uit om de tabel aan te maken
                 echo "<tr><td colspan='4'>De tabel 'voertuigen' bestaat niet.</td></tr>";
             } else {
-                $sql = "SELECT * FROM voertuigen";
+                $sql = "SELECT * FROM voertuigen ORDER BY $sort";
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -129,7 +133,6 @@
                 // Table does not exist, you can add code here to create the table if needed
                 echo "<tr><td colspan='3'>The 'bedrijven' table does not exist.</td></tr>";
             } else {
-                $sort = isset($_GET['sort']) ? $_GET['sort'] : 'naam';
                 $sql = "SELECT * FROM bedrijven ORDER BY $sort";
                 $result = $conn->query($sql);
 

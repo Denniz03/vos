@@ -221,8 +221,8 @@ input[type="submit"] {
     background-color: var(--secondary-color);
 }
 
-.list tr:first-child:hover {
-    background-color: #00000007;
+.list tr:first-child {
+    background-color: var(--gray-dark);
 }
 .list tr:first-child th:hover {
     background-color: #00000007;
