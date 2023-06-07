@@ -26,6 +26,11 @@ html {
     padding: 10px;
 }
 
+body > h2 {
+    margin-top: 32px;
+    margin-left: 16px;
+}
+
 h4 {
     margin-top: 0px;
 }

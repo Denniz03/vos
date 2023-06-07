@@ -1,6 +1,9 @@
 <?php
     include 'functions.php';    
 
+    $voertuigenList= array("carrosserie", "kenteken", "merk", "model", "uitvoering");
+    $bedrijvenList = array("naam", "straat", "huisnummer", "postcode", "plaats", "telefoon");
+
     // Array met carrosseriegroepen en bijbehorende icoonklassen
     $carrosserieIconen = array(
         "Bestelbus" => "fas fa-shuttle-van",
@@ -17,9 +20,24 @@
 
     // Haal sorteer waarde op
     $sortOrder = isset($_GET['order']) ? $_GET['order'] : 'asc';
-    echo $sortOrder;
-    $sort = isset($_GET['sort']) ? $_GET['sort'] . ' ' . $sortOrder : 'RIGHT(aankoop_datum, 4) DESC';
-    echo $sort;
+    $tab = isset($_GET['tab']) ? $_GET['tab'] : 'voertuigen';
+    if ($tab == 'voertuigen') {
+        $skipFirst = true;
+        $list = $voertuigenList;
+    } else {
+        $list = $bedrijvenList;
+    }
+    if (isset($_GET['sort'])) {
+        $sort = $_GET['sort'];
+    } else {
+        if ($tab == 'voertuigen') {
+            $sort = 'RIGHT(aankoop_datum, 4)';
+            $sortOrder = 'desc';
+        } else {
+            $sort = '"naam"';
+            $sortOrder = 'desc';
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -51,106 +69,59 @@
         <button class="tab-button" data-tab="bedrijven" onclick="location.href='?tab=bedrijven'">Bedrijven</button>
     </div>
 
-    <!-- voertuigen -->
-    <div id="voertuigen" class="tab-content">
-        <h2>Voertuigen</h2>
+    <!-- voertuigen en bedrijven -->
+    <div id="<?php echo $tab ?>" class="tab-content">
+        <h2><?php echo $tab ?></h2>
         <div class="table-toolbar">
-            <button onclick="window.location.href='add_vehicle.php'"><p>Toevoegen</p><i class="fas fa-plus"></i></button>
+            <button onclick="window.location.href='add.php?tab=<?php echo $tab ?>'"><p>Toevoegen</p><i class="fas fa-plus"></i></button>
             <button onclick="editSelectedRow()"><p>Bewerken</p><i class="fas fa-edit"></i></button>
             <button onclick="deleteSelectedRow()"><p>Verwijderen</p><i class="fas fa-remove"></i></button>
         </div>
         <table class="list">
+            <!-- tabel headers -->
             <tr>
-                <th class="<?php echo $sort === 'carrosserie' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=<?php echo $sortOrder !== 'desc' ? 'carrosserie&order=desc' : 'carrosserie'; ?>'">soort<i class="fas fa-sort"></i></th>
-                <th class="<?php echo $sort === 'kenteken' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=<?php echo $sortOrder !== 'desc' ? 'kenteken&order=desc' : 'kenteken'; ?>'">Kenteken<i class="fas fa-sort"></i></th>
-                <th class="<?php echo $sort === 'merk' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=<?php echo $sortOrder !== 'desc' ? 'merk&order=desc' : 'merk'; ?>'">Merk<i class="fas fa-sort"></i></th>
-                <th class="<?php echo $sort === 'model' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=<?php echo $sortOrder !== 'desc' ? 'model&order=desc' : 'model'; ?>'">Model<i class="fas fa-sort"></i></th>
-                <th class="<?php echo $sort === 'uitvoering' ? 'sort' : ''; ?>" onclick="location.href='?tab=voertuigen&sort=<?php echo $sortOrder !== 'desc' ? 'uitvoering&order=desc' : 'uitvoering'; ?>'">uitvoering<i class="fas fa-sort"></i></th>
-            </tr>
-            <?php
-
-            // Controleren of de tabel "voertuigen" bestaat
-            $checkTableQuery = "SHOW TABLES LIKE 'voertuigen'";
-            $checkTableResult = $conn->query($checkTableQuery);
-            if ($checkTableResult->num_rows === 0) {
-                // Tabel bestaat niet, voer hier eventueel code uit om de tabel aan te maken
-                echo "<tr><td colspan='4'>De tabel 'voertuigen' bestaat niet.</td></tr>";
-            } else {
-                $sql = "SELECT * FROM voertuigen ORDER BY $sort";
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr onclick='selectRow(this, " . $row['id'] . ", \"voertuigen\")'>";
-                        // De waarde van $row['carrosserie']
-                        $carrosserie = $row['carrosserie'];
-
-                        // Controleer of $carrosserie een bijpassend icoon heeft
-                        if (array_key_exists($carrosserie, $carrosserieIconen)) {
-                            $icoonKlasse = $carrosserieIconen[$carrosserie];
-                        } else {
-                            // Geef een standaardicoon weer als er geen bijpassend icoon is gevonden
-                            $icoonKlasse = "fas fa-question";
+                <?php
+                    foreach ($list as $tbl_header) {
+                        if ($tab == 'voertuigen' && $skipFirst == true) {
+                            echo '<th class="' . ($sort === $tbl_header ? 'sort' : '') . '" onclick="location.href=\'?tab=' . $tab . '&sort=' . ($sortOrder !== 'desc' ? $tbl_header . '&order=desc' : $tbl_header) . '\'">Soort<i class="fas fa-sort"></i></th>';
+                            $skipFirst = false;
+                            continue;
                         }
-                        echo "<td><i class='" . $icoonKlasse . "'></i></td>";
-                        echo "<td>" . $row['kenteken'] . "</td>";
-                        echo "<td>" . $row['merk'] . "</td>";
-                        echo "<td>" . $row['model'] . "</td>";
-                        echo "<td>" . $row['uitvoering'] . "</td>";
-                        echo "</tr>";
+                        echo '<th class="' . ($sort === $tbl_header ? 'sort' : '') . '" onclick="location.href=\'?tab=' . $tab . '&sort=' . ($sortOrder !== 'desc' ? $tbl_header . '&order=desc' : $tbl_header) . '\'">' . $tbl_header . '<i class="fas fa-sort"></i></th>';
                     }
-                } else {
-                    echo "<tr><td colspan='4'>Geen voertuigen gevonden</td></tr>";
-                }
-            }
-            ?>
-        </table>
-    </div>
-
-    <!-- bedrijven -->
-    <div id="bedrijven" class="tab-content">
-        <h2>Bedrijven</h2>
-        <div class="table-toolbar">
-            <button onclick="window.location.href='add_company.php'"><p>Toevoegen</p><i class="fas fa-plus"></i></button>
-            <button onclick="editSelectedRow()"><p>Bewerken</p><i class="fas fa-edit"></i></button>
-            <button onclick="deleteSelectedRow()"><p>Verwijderen</p><i class="fas fa-remove"></i></button>
-        </div>
-        <table class="list">
-            <tr>
-                <th onclick="location.href='?tab=bedrijven&sort=naam'">Naam<i class="fas fa-sort"></i></th>
-                <th onclick="location.href='?tab=bedrijven&sort=adres'">Adres<i class="fas fa-sort"></i></th>
-                <th onclick="location.href='?tab=bedrijven&sort=telefoon'">Telefoon<i class="fas fa-sort"></i></th>
+                ?>
             </tr>
+            <!-- tabel content -->
             <?php
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
-
-            // Check if the "bedrijven" table exists
-            $checkTableQuery = "SHOW TABLES LIKE 'bedrijven'";
+            $checkTableQuery = "SHOW TABLES LIKE '$tab'";
             $checkTableResult = $conn->query($checkTableQuery);
             if ($checkTableResult->num_rows === 0) {
-                // Table does not exist, you can add code here to create the table if needed
-                echo "<tr><td colspan='3'>The 'bedrijven' table does not exist.</td></tr>";
+                echo "<tr><td colspan='5'>De tabel " . $tab . " bestaat niet.</td></tr>";
             } else {
-                $sql = "SELECT * FROM bedrijven ORDER BY $sort";
+                $sql = "SELECT * FROM $tab ORDER BY $sort $sortOrder";
                 $result = $conn->query($sql);
-
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        echo "<tr onclick='selectRow(this, " . $row['id'] . ", \"bedrijven\")'>";
-                        echo "<td>" . $row['naam'] . "</td>";
-                        echo "<td>" . $row['adres'] . "</td>";
-                        echo "<td>" . $row['telefoon'] . "</td>";
+                        echo "<tr onclick='selectRow(this, " . $row['id'] . ", \"" . $tab . "\")'>";
+                        if ($tab == 'voertuigen') {
+                            $skipFirst = true;
+                        }
+                        foreach ($list as $tbl_header) {
+                            if ($tab == 'voertuigen' && $skipFirst == true) {
+                                echo "<td><i class='" . $carrosserieIconen[$row['carrosserie']] . "'></i></td>";
+                                $skipFirst = false;
+                                continue;
+                            }
+                            echo "<td>" . $row[$tbl_header] . "</td>";
+                        }
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='3'>No companies found.</td></tr>";
+                    echo "<tr><td colspan='5'>Geen " . $tab . " gevonden</td></tr>";
                 }
             }
             ?>
         </table>
-        <button onclick="window.location.href='add_company.php'">Bedrijf toevoegen</button>
     </div>
 
     <!-- details -->
@@ -178,9 +149,9 @@
                 $("#voertuigen-tabs").hide();
             }
         }
-
+        
         var selectedRow = null;
-
+        
         function selectRow(row, id, tabName) {
             if (selectedRow !== null) {
                 selectedRow.classList.remove("selected");
@@ -201,7 +172,7 @@
                 console.log("Geen rij geselecteerd");
             }
         }
-
+        
         function deleteSelectedRow() {
             var selectedRow = document.querySelector('.list tr.selected');
             if (selectedRow) {
@@ -212,6 +183,7 @@
             }
         }
     </script>
+
     <?php
         disconnectFromDatabase($conn);
     ?>
