@@ -63,80 +63,110 @@
             <h1 class="title">VOS</h1>
             <h4 class="subtitle">Voertuig Onderhoud Systeem</h4>
         </div>
+        <nav>
+            <!-- Navigatiemenu -->
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Over</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
     </header>
     <div id="tabs">
         <button class="tab-button" data-tab="voertuigen" onclick="location.href='?tab=voertuigen'">Voertuigen</button>
         <button class="tab-button" data-tab="bedrijven" onclick="location.href='?tab=bedrijven'">Bedrijven</button>
     </div>
 
-    <!-- voertuigen en bedrijven -->
-    <div id="<?php echo $tab ?>" class="tab-content">
-        <h2><?php echo $tab ?></h2>
-        <div class="table-toolbar">
-            <button onclick="window.location.href='add.php?tab=<?php echo $tab ?>'"><p>Toevoegen</p><i class="fas fa-plus"></i></button>
-            <button onclick="editSelectedRow()"><p>Bewerken</p><i class="fas fa-edit"></i></button>
-            <button onclick="deleteSelectedRow()"><p>Verwijderen</p><i class="fas fa-remove"></i></button>
-        </div>
-        <table class="list">
-            <!-- tabel headers -->
-            <tr>
-                <?php
-                    foreach ($list as $tbl_header) {
-                        if ($tab == 'voertuigen' && $skipFirst == true) {
-                            echo '<th class="' . ($sort === $tbl_header ? 'sort' : '') . '" onclick="location.href=\'?tab=' . $tab . '&sort=' . ($sortOrder !== 'desc' ? $tbl_header . '&order=desc' : $tbl_header) . '\'">Soort<i class="fas fa-sort"></i></th>';
-                            $skipFirst = false;
-                            continue;
-                        }
-                        echo '<th class="' . ($sort === $tbl_header ? 'sort' : '') . '" onclick="location.href=\'?tab=' . $tab . '&sort=' . ($sortOrder !== 'desc' ? $tbl_header . '&order=desc' : $tbl_header) . '\'">' . $tbl_header . '<i class="fas fa-sort"></i></th>';
-                    }
-                ?>
-            </tr>
-            <!-- tabel content -->
-            <?php
-            $checkTableQuery = "SHOW TABLES LIKE '$tab'";
-            $checkTableResult = $conn->query($checkTableQuery);
-            if ($checkTableResult->num_rows === 0) {
-                echo "<tr><td colspan='5'>De tabel " . $tab . " bestaat niet.</td></tr>";
-            } else {
-                $sql = "SELECT * FROM $tab ORDER BY $sort $sortOrder";
-                $result = $conn->query($sql);
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr onclick='selectRow(this, " . $row['id'] . ", \"" . $tab . "\")'>";
-                        if ($tab == 'voertuigen') {
-                            $skipFirst = true;
-                        }
-                        foreach ($list as $tbl_header) {
-                            if ($tab == 'voertuigen' && $skipFirst == true) {
-                                echo "<td><i class='" . $carrosserieIconen[$row['carrosserie']] . "'></i></td>";
-                                $skipFirst = false;
-                                continue;
+    <!-- main -->
+    <main>
+        <section>
+            <!-- voertuigen en bedrijven -->
+            <div id="<?php echo $tab ?>" class="tab-content">
+                <h2><?php echo $tab ?></h2>
+                <div class="table-toolbar">
+                    <button onclick="window.location.href='add.php?tab=<?php echo $tab ?>'"><p>Toevoegen</p><i class="fas fa-plus"></i></button>
+                    <button onclick="editSelectedRow()"><p>Bewerken</p><i class="fas fa-edit"></i></button>
+                    <button onclick="deleteSelectedRow()"><p>Verwijderen</p><i class="fas fa-remove"></i></button>
+                </div>
+                <table class="list">
+                    <!-- tabel headers -->
+                    <tr>
+                        <?php
+                            foreach ($list as $tbl_header) {
+                                if ($tab == 'voertuigen' && $skipFirst == true) {
+                                    echo '<th class="' . ($sort === $tbl_header ? 'sort' : '') . '" onclick="location.href=\'?tab=' . $tab . '&sort=' . ($sortOrder !== 'desc' ? $tbl_header . '&order=desc' : $tbl_header) . '\'">Soort<i class="fas fa-sort"></i></th>';
+                                    $skipFirst = false;
+                                    continue;
+                                }
+                                echo '<th class="' . ($sort === $tbl_header ? 'sort' : '') . '" onclick="location.href=\'?tab=' . $tab . '&sort=' . ($sortOrder !== 'desc' ? $tbl_header . '&order=desc' : $tbl_header) . '\'">' . $tbl_header . '<i class="fas fa-sort"></i></th>';
                             }
-                            echo "<td>" . $row[$tbl_header] . "</td>";
+                        ?>
+                    </tr>
+                    <!-- tabel content -->
+                    <?php
+                    $checkTableQuery = "SHOW TABLES LIKE '$tab'";
+                    $checkTableResult = $conn->query($checkTableQuery);
+                    if ($checkTableResult->num_rows === 0) {
+                        echo "<tr><td colspan='5'>De tabel " . $tab . " bestaat niet.</td></tr>";
+                    } else {
+                        $sql = "SELECT * FROM $tab ORDER BY $sort $sortOrder";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr onclick='selectRow(this, " . $row['id'] . ", \"" . $tab . "\")'>";
+                                if ($tab == 'voertuigen') {
+                                    $skipFirst = true;
+                                }
+                                foreach ($list as $tbl_header) {
+                                    if ($tab == 'voertuigen' && $skipFirst == true) {
+                                        echo "<td><i class='" . $carrosserieIconen[$row['carrosserie']] . "'></i></td>";
+                                        $skipFirst = false;
+                                        continue;
+                                    }
+                                    echo "<td>" . $row[$tbl_header] . "</td>";
+                                }
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='5'>Geen " . $tab . " gevonden</td></tr>";
                         }
-                        echo "</tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='5'>Geen " . $tab . " gevonden</td></tr>";
-                }
-            }
-            ?>
-        </table>
-    </div>
+                    ?>
+                </table>
+            </div>
 
-    <!-- details -->
-    <h2>Details</h2>
-    <div id="voertuigen-tabs">
-        <button class="tab-button" data-tab="voertuig">Voertuig</button>
-        <button class="tab-button" data-tab="techniek">Techniek</button>
-        <button class="tab-button" data-tab="aankoop">Aankoop</button>
-        <button class="tab-button" data-tab="verzekering">Verzekering</button>
-        <button class="tab-button" data-tab="tankinformatie">tankinformatie</button>
-        <button class="tab-button" data-tab="onderhoud">onderhoud</button>
-    </div>
-    <div id="content" class="tab-content">
-        <!-- Hier wordt de inhoud van view.php weergegeven -->
-    </div>
+            <!-- details -->
+            <h2>Details</h2>
+            <div id="voertuigen-tabs">
+                <button class="tab-button" data-tab="voertuig">Voertuig</button>
+                <button class="tab-button" data-tab="techniek">Techniek</button>
+                <button class="tab-button" data-tab="aankoop">Aankoop</button>
+                <button class="tab-button" data-tab="verzekering">Verzekering</button>
+                <button class="tab-button" data-tab="tankinformatie">tankinformatie</button>
+                <button class="tab-button" data-tab="onderhoud">onderhoud</button>
+            </div>
+            <div id="content" class="tab-content">
+                <!-- Hier wordt de inhoud van view.php weergegeven -->
+            </div>
+            
+        </section>
+    </main>
+
+    <!-- footer -->
+    <footer>
+        <section>
+            <!-- Voettekst van de pagina -->
+            <p class="copyright">&copy; Copyright <?php echo "2003-" . date("Y") } ?> <a href="https://denniz03.nl" target="_blank">Denniz03</a>. Alle rechten voorbehouden.</p>
+        </section>
+    </footer>
+    
+    <!-- Error / Success -->
+    <script>
+        <?php if (isset($_SESSION['alert'])) { ?>
+            <?php $alert = explode(';', $_SESSION['alert']); ?>
+            alertPopup('<?= $alert[0] ?>','<?= $alert[0] ?>','<?= $alert[1] ?>');
+        <?php } ?>
+    </script>
 
     <script>
         function loadContent(url, tabName) {
