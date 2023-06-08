@@ -10,7 +10,48 @@
     --gray: #f9f9f9;
     --gray-darker: #f1f1f1;
     --gray-dark: #e9e9e9;
+    --overlay: #00000022;
+    --shadow: #4d392822; #00000022;
+    --border: 1px solid var(--grey);
+    --border_radius: 5px;
+    --box_shadow: 0px 2px 30px var(--shadow);
+    --padding: 10px;
+    --successText: #0c5133; 3c763d;
+    --successBackground: #d1e7dd; dff0d8bb;
+    --successBorder: #d1e7dd; d6e9c6;
+    --errorText: #85232c; a94442;
+    --errorBackground: #f8d7da; F2DEDEbb;
+    --errorBorder: #f6c3c8; ebccd1;
+    --infoText: #2f4096; 31708f;
+    --infoBackground: #cfe2fe; d9edf7bb;
+    --infoBorder: #b6d3fc; bce8f1;
+    --warningText: #664e0f; 8a6d3b;
+    --warningBackground: #fff3cf; fcf8e3bb;
+    --warningBorder: #ffedb8; faebcc;
+    --noteText: #5341a8;
+    --noteBackground: #eae6fe;
+    --noteBorder: #dfd8fe;
 }
+
+/* ALERT */
+#alert {position: absolute; display: none; margin-top: 75px}
+.alert {margin-left: 50%; margin-right: 50%; margin-bottom: var(--padding); padding: var(--padding); transform: translateX(-50%); border: 1px solid transparent; border-radius: var(--border_radius); max-width: 768px; width: calc(100% - calc(4 * var(--padding))); z-index: 2; backdrop-filter: blur(10px)}
+.alert-success { background: var(--successBackground); border-color: var(--successBorder);}
+.alert-success, .alert-success * { color: var(--successText);}
+.alert-error { background: var(--errorBackground) !important; border-color: var(--errorBorder);}
+.alert-error, 
+.alert-error * { color: var(--errorText);}
+.alert-info { background: var(--infoBackground); border-color: var(--infoBorder);}
+.alert-info, 
+.alert-info * { color: var(--infoText);}
+.alert-warning { background: var(--warningBackground); border-color: var(--warningBorder);}
+.alert-warning, 
+.alert-warning * { color: var(--warningText);}
+.alert-note { background: var(--noteBackground); border-color: var(--noteBorder);}
+.alert-note, 
+.alert-note * { color: var(--noteText);}
+.alert-text {display: flex; gap: var(--padding)}
+.alert-text strong {text-transform: Capitalize}
 
 /* Algemene stijlen */
 * {
@@ -23,7 +64,16 @@
 
 html {
     font-family: 'Roboto', sans-serif;
-    padding: 10px;
+    padding: var(--padding);
+    height: calc(100% - var(--padding) - var(--padding));
+}
+
+body {
+    margin: 0; 
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 body > h2 {
@@ -39,7 +89,9 @@ a {
     text-decoration: none;
 }
 
-header {
+.overlay {display: none; position: fixed; top: 0; height: 100%; width: 100%; background: var(--overlay); backdrop-filter: blur(2px); z-index: 10}
+
+header section {
     display: flex;
     align-items: center;
 }
@@ -71,6 +123,34 @@ li {
     text-transform: initial;
 }
 
+nav {
+    width: 100%;
+    background-color: var(--text-lighter);
+    margin-bottom: var(--padding);
+}
+nav a {
+    color: white;
+}
+nav ul {
+    display: inline-flex;
+    gap: var(--padding);
+    margin: 0px;
+    padding: 0px;
+}
+nav li {
+    list-style: none;
+    padding: calc( 2 * var(--padding));
+}
+nav li:hover {
+    background-color: #00000011;
+}
+nav li:hover a {
+    color: var(--primary-color-darker);
+}
+
+main {
+    flex: 1;
+}
 /* Tabbladstijl */
 .tab-button {
     margin-bottom: -1px;
@@ -264,4 +344,18 @@ input[type="submit"] {
     margin: -15px;
     text-align: left;
     width: auto;
+}
+
+/* FOOTER */
+footer {
+    width: 100%; 
+    height: 50px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    position: relative;
+}
+footer .copyright {
+    padding: 5px; 
+    text-align: center;
 }

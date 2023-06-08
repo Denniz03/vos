@@ -58,11 +58,13 @@
 </head>
 <body>
     <header>
-        <img src="images/logo.png" alt="Logo" class="logo">
-        <div class="title-subtitle">
-            <h1 class="title">VOS</h1>
-            <h4 class="subtitle">Voertuig Onderhoud Systeem</h4>
-        </div>
+        <section>
+            <img src="images/logo.png" alt="Logo" class="logo">
+            <div class="title-subtitle">
+                <h1 class="title">VOS</h1>
+                <h4 class="subtitle">Voertuig Onderhoud Systeem</h4>
+            </div>
+        </section>
         <nav>
             <!-- Navigatiemenu -->
             <ul>
@@ -156,7 +158,7 @@
     <footer>
         <section>
             <!-- Voettekst van de pagina -->
-            <p class="copyright">&copy; Copyright <?php echo "2003-" . date("Y") } ?> <a href="https://denniz03.nl" target="_blank">Denniz03</a>. Alle rechten voorbehouden.</p>
+            <p class="copyright">&copy; Copyright <?php echo "2003-" . date("Y") ?> <a href="https://denniz03.nl" target="_blank">Denniz03</a>. Alle rechten voorbehouden.</p>
         </section>
     </footer>
     
@@ -213,9 +215,8 @@
             }
         }
     </script>
-
-    <?php
-        disconnectFromDatabase($conn);
-    ?>
 </body>
 </html>
+<?php
+    disconnectFromDatabase($conn);
+?>
